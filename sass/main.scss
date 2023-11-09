@@ -1,0 +1,24 @@
+// Подключаем свои файлы паршалы со стилями.----------
+// ----------------------------------------------------
+// подключаем файл с переменными.
+// @import './utils/variables';
+
+// подключаем файлы с утилитами.
+// @import './utils/placeholders';
+
+// подключаем свой файл modern-normalize, который мы скопировали на сайте и создали у себя в папке base.
+// @import './base/normalize';
+
+// подключаем файлы компоненты (header, logo, section и т.п.).
+// @import './components/page-header';
+// @import './components/logo';
+
+// ----------------------------------------------------
+
+// @mixin bordered() {
+//   border: 1px solid red;
+// }
+
+// p {
+//   @include bordered();
+// }
