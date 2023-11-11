@@ -1,0 +1,636 @@
+// Переменные. (Прописываем их в файле _varialables.scss)
+// $color: red;
+// $main-width: 100px;
+
+// ________________________________________________________
+
+body {
+  background-color: $color;
+  width: $main-width;
+}
+
+// ________________________________________________________
+
+// ----- Вложенность -----
+
+// ----- код html -----
+// <section class="section">
+//   <h2 class="title"></h2>
+//   <p class="text"></p>
+// </section>
+// ----------
+
+.section {
+  color: red($color: #000000);
+}
+.section .title {
+  color: green;
+}
+.section .text {
+  color: teal;
+}
+
+// // Вложенность (селектор потомка)-----
+
+.section {
+  color: red;
+  .title {
+    color: green;
+  }
+  .text {
+    color: teal;
+  }
+}
+
+// ________________________________________________________
+
+// ----- Вложенность & аперсант. -----
+
+// & аперсант - сшивает силектор потомка с названием родительского силектора.
+
+// ----- код html -----
+// <section class="section">
+//   <h2 class="section-title"></h2>
+//   <p class="section-text"></p>
+// </section>
+// ----------
+
+// & аперсант говорит - возьми родительское имя класса и к нему приставь селектор title.
+.section {
+  color: red;
+
+  &-title {
+    color: teal;
+
+    &--red {
+      color: red;
+    }
+  }
+
+  &-text {
+    color: green;
+  }
+}
+
+// _______________________________________________________
+
+// Так писать ненужно, потому что читать сложно! Большая вложенность это не хорошо!
+
+// ----- код html -----
+// <section class="section">
+//   <h2 class="section__title section__title--red"></h2>
+//   <p class="section__text"></p>
+// </section>
+// ----------
+
+.section {
+  color: red;
+
+  &__title {
+    color: red;
+
+    &--red {
+      color: green;
+    }
+  }
+
+  &__text {
+    color: black;
+  }
+}
+
+//  ________________________________________________________
+
+// Как писать правильно!
+// Модификаторы пишем отдельно для читабельности, а состояния элементов к примеру: :hover, :focus и т.п., внутри модификатора.
+
+// ----- код html -----
+// <section class="section">
+//   <h2 class="section__title section__title--red"></h2>
+//   <p class="section__text"></p>
+// </section>
+// ----------
+
+.section {
+  color: red;
+
+  &:hover {
+    color: blue;
+  }
+}
+
+// ----------
+
+.section__title {
+  color: red;
+
+  &:hover {
+    color: green;
+  }
+
+  &--red {
+    color: red;
+  }
+}
+
+// ----------
+
+.section__text {
+  color: green;
+
+  &:hover {
+    color: red;
+  }
+}
+
+//  ________________________________________________________
+
+// Вложенность с оператлром конкатенации: '& селектор' и 'селектор &' на примере стилей при ховере по предку.
+
+// ----- код html -----
+// <div class="box">
+//   <button class="button">qweqwe</button>
+// </div>
+// ----------
+
+.box {
+  background-color: red;
+}
+
+.button {
+  background-color: teal;
+
+  &:hover,
+  &:focus {
+    color: black;
+  }
+
+  .box:hover & {
+    // Когда этот box:hover, для этого button примени эти стили.
+    background-color: orange;
+  }
+}
+
+//  ________________________________________________________
+
+// ----- Выбираем соседа  -----
+
+// ----- код html -----
+// <p></p>
+// <p></p>
+// ----------
+
+p {
+  & + & {
+    background-color: red;
+  }
+}
+
+//  ________________________________________________________
+
+// ----- Прописываем код в разных файлах. -----
+
+// ----- код html -----
+// <div class="page-header"></div>
+// <div class="logo"></div>
+// ----------
+
+// В файле (_variables.scss) создаем переменную
+
+$bg-color: red;
+
+// -----
+
+// В файле (_page-header.scss) пишем стили для page-header
+
+.page-header {
+  background-color: $bg-color;
+}
+
+----- В файле _page-header.scss пишем стили для logo .logo {
+  background-color: red;
+
+  &:hover {
+    background-color: orange;
+  }
+}
+
+//  ________________________________________________________
+
+// ----- код html -----
+// <ul class="list">
+//   <li class="list-item"></li>
+//   <li class="list-item"></li>
+//   <li class="list-item"></li>
+//   <li class="list-item"></li>
+//   <li class="list-item"></li>
+//   <li class="list-item"></li>
+//   <li class="list-item"></li>
+//   <li class="list-item"></li>
+//   <li class="list-item"></li>
+// </ul>
+// ----------
+
+.list-item {
+  background-color: red;
+
+  &:nth-child(3) {
+    background-color: blue;
+  }
+}
+
+//  ________________________________________________________
+
+// ----- Директива @extend -----
+
+// ----- код html -----
+
+// запись не в таком формате
+
+// <p class="notification notification-error"></p>
+// <p class="notification notification-success"></p>
+
+// а в таком формате без лишнего класса базового.
+
+// <p class="notification-error"></p>
+// <p class="notification-success"></p>
+// ----------
+
+.notification {
+  background-color: #ccc;
+
+  font-size: 20px;
+  padding: 20px;
+}
+
+.notification-error {
+  @extend .notification;
+  background-color: red;
+}
+
+.notification-success {
+  @extend .notification;
+  background-color: green;
+}
+
+//  ________________________________________________________
+
+// ----- % Плейсхолдеры (плейсхолдер это статический шаблон) -----
+
+// Это называется шаблон. Когда у нас есть общий набор свойств который нужно применить к разным селекторам, мы ставим шаблон.
+
+// ----- код html -----
+// <p class="notification-error"></p>
+// <p class="notification-success"></p>
+// ----------
+
+%notification {
+  //   Это мы записываем в файл с утилитами папка (utils файл  _placeholders).
+  background-color: #ccc;
+
+  font-size: 20px;
+  padding: 20px;
+}
+
+%list {
+  //   Это мы записываем в файл с утилитами (папка utils файл  _placeholders).
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+// ----------------------
+
+//  А в файлах используем єтот шаблон
+
+.notification-error {
+  @extend %notification;
+  background-color: red;
+}
+
+.notification-success {
+  @extend %notification;
+  background-color: green;
+}
+
+.features {
+  @extend %list;
+}
+
+//  ________________________________________________________
+
+// ----- Директива @mixin (миксин -это настраиваемый шаблон) -----
+
+// Синтаксис такой.
+// Миксин обьявляется с помощью дерективы @mixin и его имени. Далее могут идти необязательные параметры в круглых скобках (сами скобки обязательны), ф в фигурных - набор свойств и значений.
+
+// ----- Конспект -----
+
+// @mixin имя(параметры) {
+// Свойства
+// }
+// -----
+// Создадим миксин для задания только верхней и нижней рамки элемента, и сделаем цвет рамки настраеваемым значением.
+
+@mixin bordered($color) {
+  border-top: 1px solid $color;
+  border-bottom: 1px solid $color;
+}
+// -----
+
+// Добавить стили миксина к селектору можно при помощи директивы @include, после которой вызываем миксин и передаем значения для настраиваемых свойств.
+
+@mixin bordered($color) {
+  border-top: 1px solid $color;
+  border-bottom: 1px solid $color;
+}
+.section {
+  @include bordered(tomato);
+  padding: 20px;
+}
+.header {
+  @include bordered(green);
+  min-height: 80px;
+}
+// После компиляции будут только правила для селекторов .section и .header с добавленным кодом из миксина, кода обьявления самого миксина не будет.
+
+// -----
+
+// ----- Репета примеры (показывает варианты) -----
+
+// Миксины пишутся в файле _mixins.scss который в папке (utils), и подключаются в файле main.scss.
+@mixin bordered($color) {
+  border: 1px solid $color;
+}
+
+// А используем их в своих файлах
+p {
+  @include bordered(green);
+}
+
+div {
+  @include bordered(yellow);
+}
+
+// ----------
+
+// Миксины пишутся в файле _mixins.scss который в папке (utils), и подключаются в файле main.scss.
+@mixin bordered($color) {
+  border-top: 1px solid $color;
+  border-bottom: 1px solid $color;
+}
+
+// А используем их в своих файлах
+p {
+  @include bordered(green);
+}
+
+div {
+  @include bordered(yellow);
+}
+
+// ----------
+
+// Передача нескольких переменных -----
+// dashed - это пунктирная, type - это тип.
+
+// Миксины пишутся в файле _mixins.scss который в папке (utils), и подключаются в файле main.scss.
+@mixin bordered($color, $type) {
+  border-top: 1px $type $color;
+  border-bottom: 1px $type $color;
+}
+
+// А используем их в своих файлах
+p {
+  @include bordered(green, solid);
+}
+
+div {
+  @include bordered(yellow, dashed);
+}
+
+// ----------
+
+// Передача нескольких переменных (solid по умолчанию) ставим после двоеточия -----
+// dashed - это пунктирная, type - это тип.
+
+// Миксины пишутся в файле _mixins.scss который в папке (utils), и подключаются в файле main.scss.
+@mixin bordered($color, $type: solid) {
+  border-top: 1px $type $color;
+  border-bottom: 1px $type $color;
+}
+
+// А используем их в своих файлах
+p {
+  @include bordered(green); // Здесь будет solid по умолчанию.
+}
+
+div {
+  @include bordered(yellow, dashed); // dashed - это пунктирная.
+}
+
+// ----------
+// type - это тип.
+
+// Миксины пишутся в файле _mixins.scss который в папке (utils), и подключаются в файле main.scss.
+@mixin bordered($color: black, $type: solid) {
+  border-top: 1px $type $color;
+  border-bottom: 1px $type $color;
+}
+
+// А используем их в своих файлах
+p {
+  @include bordered(); // Будет черный по умолчанию и solid type.
+}
+
+div {
+  @include bordered(); // Будет черный по умолчанию и solid type.
+}
+
+// ----------
+
+// Не передаем цвет, а передаем только type.
+// dashed - это пунктирная, type - это тип.
+
+// Миксины пишутся в файле _mixins.scss который в папке (utils), и подключаются в файле main.scss.
+@mixin bordered($color: black, $type: solid) {
+  border-top: 1px $type $color;
+  border-bottom: 1px $type $color;
+}
+
+// А используем их в своих файлах
+p {
+  @include bordered();
+}
+
+div {
+  // Передаем в другом порядке (не в том как указано).
+  @include bordered($type: dashed); // dashed - это пунктирная, type - это тип.
+}
+
+//  ________________________________________________________
+
+//  Миксин и Плейсхолдер для центрирования флексами.
+
+// ----------
+
+// Плейсхолдер для центрирования флексами.
+
+%centeredFlex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+p {
+  @extend %centeredFlex;
+}
+
+div {
+  @extend %centeredFlex;
+}
+
+// Но есть проблема с плейсхолдером, мы не можем изменить значение свойств, например кнопке сделать инлайн блок и поэтому нам поможет в этом миксин (потому что миксин -это настраиваемый шаблон, а плейсхолдер это статический шаблон).
+
+// ----------
+
+//  Миксин для центрирования флексами.
+
+// Миксины пишутся в файле _mixins.scss который в папке (utils), и подключаются в файле main.scss.
+@mixin centeredFlex($type) {
+  display: $type;
+  align-items: center;
+  justify-content: center;
+}
+
+// А используем их в своих файлах
+p {
+  @include centeredFlex(flex);
+}
+
+div {
+  @include centeredFlex(flex);
+}
+
+button {
+  @include centeredFlex(inline-flex);
+}
+
+// ----------
+
+//  Миксин для центрирования флексами.
+// А если у меня флексы будут в 90% случаев, то тогда (значение по умолчанию).
+
+// Миксины пишутся в файле _mixins.scss который в папке (utils), и подключаются в файле main.scss.
+@mixin centeredFlex($type: flex) {
+  display: $type;
+  align-items: center;
+  justify-content: center;
+}
+
+// А используем их в своих файлах
+p {
+  @include centeredFlex(); //  Когда по умолчанию, то передовать ничего не надо.
+}
+
+div {
+  @include centeredFlex(); //  Когда по умолчанию, то передовать ничего не надо.
+}
+
+button {
+  @include centeredFlex(inline-flex);
+}
+
+//  ________________________________________________________
+
+// Деректива each.
+
+// ----- код html -----
+// <ul class="features">
+//   <li class="icon icon-facebook"></li>
+//   <li class="icon icon-github"></li>
+//   <li class="icon icon-linkedin"></li>
+//   <li class="icon icon-twitter"></li>
+// </ul>
+// ----------
+
+// Это мы делаем как обычно.-----
+
+.icon {
+  width: 100px;
+  height: 100px;
+}
+
+.icon-facebook {
+  background-image: url('../images/facebook.svg');
+}
+.icon-github {
+  background-image: url('../images/github.svg');
+}
+.icon-linkedin {
+  background-image: url('../images/linkedin.svg');
+}
+.icon-twitter {
+  background-image: url('../images/twitter.svg');
+}
+// Но это все можно автоматизировать с помощью специальных конструкций (деректива each).
+
+// ----------------------------------------------------
+
+// Деректива each
+
+// Правило -----
+@each $var in list {
+  // Читается так: для каждого значения ($var) из списка (list) можно что-то сделать.
+}
+
+// ---------------
+
+// Пример на цвете background-color -----
+
+$icons: 'facebook', 'github', 'linkedin', 'twitter';
+
+@each $iconName in $icons {
+  .icon-#{$iconName} {
+    background-color: teal;
+  }
+}
+
+// ---------------
+
+// Пример с использованием иконок соцсетей -----
+
+$icons: 'facebook', 'github', 'linkedin', 'twitter';
+
+@each $iconName in $icons {
+  .icon-#{$iconName} {
+    background-image: url('../images/#{$iconName}.svg');
+  }
+}
+
+// Там где мы хотим сделать эти иконки эту штуку прийдется повторять N-ное кол-во раз, это не удобно (потому, что это переиспользование кода). И поэтому мы делаем @mixin (пример ниже).
+
+// -------------------------
+
+// Пример с использованием @mixin иконок соцсетей ( Интерполяция). -----
+
+$socialIcons: 'facebook', 'github', 'linkedin', 'twitter'; // А используем их в своих файлах
+
+// Миксины пишутся в файле _mixins.scss который в папке (utils), и подключаются в файле main.scss.
+@mixin generateIcons($iconList) {
+  @each $iconName in $iconList {
+    .icon-#{$iconName} {
+      background-image: url('../images/#{$iconName}.svg');
+    }
+  }
+}
+
+@include generateIcons($socialIcons); // А вызываем их в своих файлах.
+
+// -----
+
+$techIcons: 'html', 'css', 'js'; // А используем их в своих файлах
+
+@include generateIcons($techIcons); // А используем их в своих файлах
+
+//  ________________________________________________________
